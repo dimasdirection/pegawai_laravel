@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
+
+    //Controller route declarations will automatically be prefixed with this namespace.
+    protected $namespace = 'App\Http\Controllers';
+
     /**
      * The path to the "home" route for your application.
      *

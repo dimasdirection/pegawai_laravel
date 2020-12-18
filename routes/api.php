@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('admins', 'AdminController@index');
+
+Route::post('admins/insert', 'AdminController@store');
+
+Route::put('admins/update/{id_admin}', 'AdminController@update');
+
+Route::delete('admins/delete/{id_admin}', 'AdminController@destroy');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

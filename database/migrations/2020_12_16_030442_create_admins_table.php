@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use phpDocumentor\Reflection\Types\Nullable;
 
 class CreateAdminsTable extends Migration
 {
@@ -17,13 +18,12 @@ class CreateAdminsTable extends Migration
             $table->increments('id_admin');
             $table->string('first_name', 25);
             $table->string('last_name', 25);
-            $table->string('email', 50);
+            $table->string('email', 50)->unique();
             $table->string('password', 50);
-            $table->timestamp('created_time')->nullable();
-            $table->dateTime('updated_time');
-            $table->integer('created_at');
-            $table->integer('updated_at');
-            $table->integer('deleted_at');
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
         });
     }
 
