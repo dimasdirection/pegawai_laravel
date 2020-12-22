@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin; //add model
+use Validator;
 
 class AdminController extends Controller
 {
@@ -16,14 +17,14 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->get('keyword'); //variable for search data admin
-        $queryAdminSelect = Admin::all(); //query for show data admin
+        $queryAdminSelect = Admin::select(['id_admin', 'first_name', 'last_name', 'email'])->get(); //query for show data admin
         if($keyword)
         {
             $queryAdminSelect = Admin::where('first_name', 'LIKE', "%$keyword%")->get();
         }
         return response([
             'status' => 'OK',
-            'message' => 'Show Admin Data',
+            'message' => 'Show Admins Data',
             'data' => $queryAdminSelect
         ], 200);
     }
@@ -43,19 +44,36 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         //check admin data using validation laravel
-        $request->validate([
+        $validate = [
             'first_name' => 'required|max:25', 'string',
             'last_name' => 'required|max:25', 'string',
-            'email' => ['required', 'string', 'email', 'max:50', 'unique:users'],
-            'password' => 'required', 'string'
-        ]);
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:50', 'unique:users'],
+            'password' => 'required|min:5', 'string', 'password:api'
+        ];
+
+        $message = [
+            'first_name.required'    => 'Nama wajib diisi maksimal 25 karakter.',
+            'last_name.required'     => 'Nama wajib diisi maksimal 25 karakter.',
+            'email.required'         => 'Email wajib diisi maksimal 25 karakter.',
+            'email.email'            => 'Email tidak valid.',
+            'email.unique'           => 'Email sudah terdaftar.',
+            'password.required'      => 'Password wajib diisi.',
+            'password.min'           => 'Password minimal diisi dengan 5 karakter.',
+        ];
+
+        $this->validator = Validator::make($request->all(), $validate, $message);
+
+        if($this->validator->fails())
+        {
+            return redirect()->back()->withErrors($this->validator)->withInput($request->all());
+        }
 
         //query for insert admin data
         $insertAdminData = new Admin();
         $insertAdminData->first_name = $request->first_name;
         $insertAdminData->last_name = $request->last_name;
         $insertAdminData->email = $request->email;
-        $insertAdminData->password = $request->password;
+        $insertAdminData->password = bcrypt($request->password);
         $insertAdminData->save();
         return response([
             'status' => 'Created',
@@ -95,6 +113,14 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //check admin data using validation laravel
+        $request->validate([
+            'first_name' => 'required|max:25', 'string',
+            'last_name' => 'required|max:25', 'string',
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:50', 'unique:users'],
+            'password' => 'required', 'string', 'password:api'
+        ]);
+
         //check data for update with primary key
         $checkAdminData = Admin::firstWhere('id_admin', $id);
         if($checkAdminData)

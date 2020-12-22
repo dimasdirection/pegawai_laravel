@@ -3,9 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use phpDocumentor\Reflection\Types\Nullable;
 
-class CreateSuperadminsTable extends Migration
+class CreateOffWorksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,17 +13,18 @@ class CreateSuperadminsTable extends Migration
      */
     public function up()
     {
-        Schema::create('superadmins', function (Blueprint $table) {
-            $table->increments('id_super_admin');
-            $table->integer('admin_id')->unsigned();
-            $table->string('email', 50)->unique();
-            $table->string('password', 100);
+        Schema::create('off_works', function (Blueprint $table) {
+            $table->increments('id_off_work');
+            $table->integer('employee_id')->unsigned();
+            $table->text('reason');
+            $table->date('start_date');
+            $table->date('finish_date');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
 
-            $table->foreign('admin_id')->references('id_admin')->on('admins');
+            $table->foreign('employee_id')->references('id_employee')->on('employees');
         });
     }
 
@@ -35,6 +35,6 @@ class CreateSuperadminsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('superadmins');
+        Schema::dropIfExists('off_works');
     }
 }
