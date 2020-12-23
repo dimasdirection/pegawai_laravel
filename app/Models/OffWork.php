@@ -19,4 +19,7 @@ class OffWork extends Model
 
     //use date type
     protected $dateFormat = 'Y-m-d';
+
+    //use field on table
+    protected $fillable = ['employee_id', 'reason', 'start_date', 'finish_date'];
 }
