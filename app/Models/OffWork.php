@@ -16,4 +16,7 @@ class OffWork extends Model
 
     //use timestamp
     public $timestamps = true;
+
+    //use date type
+    protected $dateFormat = 'Y-m-d';
 }

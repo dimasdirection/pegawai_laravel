@@ -16,4 +16,7 @@ class Employee extends Model
 
     //use timestamp
     public $timestamps = true;
+
+    //list field on table
+    protected $fillable = ['first_name', 'last_name', 'email', 'phone_number', 'address', 'gender'];
 }

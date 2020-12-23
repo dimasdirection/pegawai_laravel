@@ -17,4 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('admins', 'AdminController@index');
+Route::get('test', function () {
+    return view('admin.index');
+});
